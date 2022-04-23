@@ -19,9 +19,9 @@ export class Searchbar extends Component {
     // console.log(this.state.searchImg);
   };
 
-  onResetForm = () => {
-    this.setState({ searchImg: '', })
-  };
+  // onResetForm = () => {
+  //   this.setState({ searchImg: '', })
+  // };
 
   heandleSubmit = event => {
     event.preventDefault();
@@ -52,7 +52,6 @@ export class Searchbar extends Component {
           </Button>
 
           <Input
-            className="input"
             type="text"
             name="searchImg"
             value={searchImg}

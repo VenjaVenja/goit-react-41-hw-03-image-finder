@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 export const fetchAPI = async (searchImg, page) => {
   const URL = 'https://pixabay.com/api/';
@@ -15,5 +15,16 @@ export const fetchAPI = async (searchImg, page) => {
   };
 
   const response = await axios.get(URL, options);
-  return response.data;
+  const mappedImgs = response.data.hits.map(
+    ({ id, largeImageURL, webformatURL }) => ({
+      id,
+      largeImageURL,
+      webformatURL,
+    })
+  );
+
+  if (response.data.total === 0) {
+    return Promise.reject(new Error('Something get wrong!'));
+  }
+  return mappedImgs;
 };

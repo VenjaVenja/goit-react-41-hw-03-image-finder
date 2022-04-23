@@ -2,15 +2,15 @@ import propTypes from "prop-types";
 import { List } from './ImageGallery.styled';
 import { ImageGalleryItem } from "components/ImageGalleryItem/ImageGalleryItem";
 
-export const ImageGallery = ({images, openModal}) => (
-    <List className="gallery">
-        {images.map(({ id, webformatURL, largeImageURL, tags }) => (
+export const ImageGallery = ({images, toggleModal, openModalLargeImg}) => (
+    <List>
+        {images.map(({ id, webformatURL, largeImageURL }) => (
             <ImageGalleryItem
                 key={id}
                 smallImage={webformatURL}
-                description={tags}
                 largeImage={largeImageURL}
-                openModal={openModal}
+                openModalLargeImg={openModalLargeImg}
+                toggleModal={toggleModal}
             />
         ))}
     </List>
@@ -22,7 +22,7 @@ ImageGallery.propTypes = {
             id: propTypes.number.isRequired,
             webformatURL: propTypes.string.isRequired,
             largeImageURL: propTypes.string.isRequired,
-            tags: propTypes.string.isRequired,
-        })),
-    openModal: propTypes.func.isRequired,
+        })).isRequired,
+    toggleModal:propTypes.func.isRequired,
+    openModalLargeImg: propTypes.func.isRequired,
 };

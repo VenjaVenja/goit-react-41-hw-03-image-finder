@@ -1,7 +1,9 @@
 import styled from '@emotion/styled';
 
 export const LoadMoreBtn = styled.button`
-display: inline-flex;
+/* display: inline-flex; */
+display: inline-block;
+
 margin-top: 30px;
 margin-bottom: 30px;
 margin-left: 45%;
@@ -26,8 +28,18 @@ box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
   0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
 transform: scale(1);
 transition: all 500ms cubic-bezier(0.4, 0, 0.2, 1);
-  &:hover,
-  &:focus {
-    transform: scale(0.97);
-    background-color: #57606a;
-  }`;
+  &:hover
+  /* &:focus  */
+  {
+    /* transform: scale(0.97);
+    background-color: #57606a; */
+    animation: pulsate 1s ease-in-out;
+  }
+  @keyframes pulsate {
+    0%{
+      box-shadow:
+      0 0 25px #5ddcff,
+      0 0 50px #4e00c2;
+    }
+  }
+  `;

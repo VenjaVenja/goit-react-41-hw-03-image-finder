@@ -15,17 +15,14 @@ export class App extends Component {
     searchImg: '',
     images: [],
     page: 1,
+    error: null,
     isLoading: false,
-    error: '',
     showModal: false,
-    currentImg: null,
-    currentImgDescr: null,
-  }
+    modalLargeImg: null,
+  };
 
   componentDidMount() {
-    this.setState({
-      images: [],
-    })
+    this.setState({ images: [] })
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -36,17 +33,17 @@ export class App extends Component {
     const nextPage = this.state.page;
 
     if (prevSearch !== nextSearch) {
-      this.setState({ images: [], page: 1,} );
-    
-       ///включаем лоудер
+      this.setState({ images: [], page: 1, });
+      ///включаем лоудер
       this.setState({ isLoading: true });
-
       ///запрос на сервер
-      this.fetchImages(); 
+      this.fetchImages();
     }
 
     if (nextPage > prevPage) {
-      this.fetchImages()
+      this.setState({ isLoading: true });
+      
+      this.fetchImages();
     };
 
     // scrollSmooth();
@@ -57,40 +54,27 @@ export class App extends Component {
 
     fetchAPI(searchImg, page).then(response => {
       this.setState(prevState => ({
-        images: [...prevState.images, ...response.hits],
+        images: [...prevState.images, ...response],
       }))
     })
       .catch(error => this.setState({ error })) ///ловим ошибку
       .finally(() => this.setState({ isLoading: false })) ///отключение лоудера
   };
-  
+
 
   onSearchImg = searchImg => {
-    // console.log(searchImg)
     this.setState({ searchImg });
   };
 
   onNextPageSearch = () => {
     this.setState(prevState => ({
       page: prevState.page + 1
+
     }))
   };
 
-  openModal = event => {
-    const currentImg = event.target.dataset.large;
-    // console.log(event.target.dataset.large)
-
-    const currentImgDescr = event.target.alt;
-    // console.log(event.target.alt)
-
-    if (event.target.nodeName === 'IMG') {
-      
-      this.setState(({ showModal }) => ({
-        showModal: !showModal,
-        currentImg: currentImg,
-        currentImgDescr: currentImgDescr,
-      }));
-    }
+  openModalLargeImg = image => {
+    this.setState({ modalLargeImg: image });
   };
 
   toggleModal = () => {
@@ -98,35 +82,30 @@ export class App extends Component {
       showModal: !showModal,
     }));
   };
-  
 
   render() {
 
-    const { toggleModal, onSearchImg, openModal, onNextPageSearch } = this;
-    const { images, isLoading, showModal, currentImg, currentImgDescr } = this.state;
+    const { toggleModal, onSearchImg, openModalLargeImg, onNextPageSearch } = this;
+    const { images, isLoading, showModal, modalLargeImg} = this.state;
     const imagesArrayLength = images.length;
 
     return (
-     <>
+      <>
         <Searchbar onSubmit={onSearchImg} />
 
-        {imagesArrayLength === 0 && !isLoading && <HelloText text="Hai! What`s you looking for?"/>}
+        {imagesArrayLength === 0 && !isLoading && <HelloText text="Hai! What`s you looking for?" />}
 
-        <ImageGallery
-          images={images} 
-          openModal={openModal}
-          />
-        
+        {imagesArrayLength > 0 && <ImageGallery images={images} toggleModal={toggleModal} openModalLargeImg={openModalLargeImg} />}
+
         {isLoading && <LoaderBars />}
-        
+
         {imagesArrayLength > 0 && <Button onClick={onNextPageSearch} />}
 
         {showModal && (<Modal
           onClose={toggleModal}
-          currentImg={currentImg}
-          currentImgDescr={currentImgDescr}
-          />)}
-    </>
+          largeImage={modalLargeImg}
+        />)}
+      </>
     );
   }
 };
